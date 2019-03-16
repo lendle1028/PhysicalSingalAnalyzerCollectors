@@ -1,0 +1,22 @@
+const request=require('request');
+const fs=require('fs');
+request.put("https://api.github.com/repos/lendle1028/PhysicalSingalAnalyzerCollectors/contents/test.txt?access_token=e388b50972422be0ff6df8ac031d59811ce856b1", 
+    {
+        body: JSON.stringify({
+            content: fs.readFileSync("test.js").toString("base64"),
+            message: "commit",
+            "committer": {
+                "name": "lendle",
+                "email": "lendle_tseng@seed.net.tw"
+            },
+        }),
+        headers: {
+            "User-Agent": "chrome",
+            //"Authorization": "token e388b50972422be0ff6df8ac031d59811ce856b1"
+            "Authorization": "Basic "+new Buffer("lendle1028:len10281").toString("base64")
+        }
+    },
+    function(error, response, body){
+        console.log(body);
+    }
+);
