@@ -1,0 +1,62 @@
+const request=require('request');
+const fs=require('fs');
+const argv=require('yargs')
+	.usage('Usage: $0 --user [username] --password [password]')
+	.alias('u', 'user')
+	.alias('p', 'password')
+	.demandOption(['u', 'p'])
+	.argv;
+
+request("https://api.github.com/repos/lendle1028/PhysicalSingalAnalyzerCollectors/contents/test.txt", 
+	{
+		headers: {
+			"User-Agent": "chrome"
+		}
+	},
+	function(error, response, body){
+		body=JSON.parse(body);
+		if(body.message!="Not Found"){
+			request.put("https://api.github.com/repos/lendle1028/PhysicalSingalAnalyzerCollectors/contents/test.txt", 
+				{
+					body: JSON.stringify({
+						sha: body.sha,
+						content: fs.readFileSync("test.js").toString("base64"),
+						message: "commit",
+						"committer": {
+							"name": "lendle",
+							"email": "lendle_tseng@seed.net.tw"
+						},
+					}),
+					headers: {
+						"User-Agent": "chrome",
+						"Authorization": "Basic "+Buffer.from(argv.u+":"+argv.p).toString("base64")
+					}
+				},
+				function(error, response, body){
+					console.log(body);
+				}
+			);
+		}else{
+			request.put("https://api.github.com/repos/lendle1028/PhysicalSingalAnalyzerCollectors/contents/test.txt", 
+				{
+					body: JSON.stringify({
+						content: fs.readFileSync("test.js").toString("base64"),
+						message: "commit",
+						"committer": {
+							"name": "lendle",
+							"email": "lendle_tseng@seed.net.tw"
+						},
+					}),
+					headers: {
+						"User-Agent": "chrome",
+						"Authorization": "Basic "+Buffer.from(argv.u+":"+argv.p).toString("base64")
+
+					}
+				},
+				function(error, response, body){
+					console.log(body);
+				}
+			);
+		}
+	}
+);
