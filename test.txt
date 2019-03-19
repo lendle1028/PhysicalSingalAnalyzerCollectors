@@ -1,4 +1,4 @@
-const request=require('request');//123
+const request=require('request');
 const fs=require('fs');
 const argv=require('yargs')
 	.usage('Usage: $0 --user [username] --password [password]')
